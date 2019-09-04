@@ -20,8 +20,6 @@ Game::Game(HINSTANCE hInstance)
 		720,			   // Height of the window's client area
 		true)			   // Show extra stats (fps) in title bar?
 {
-	// Initialize fields
-	vertexBuffer = 0;
 	indexBuffer = 0;
 	vertexShader = 0;
 	pixelShader = 0;
@@ -43,10 +41,6 @@ Game::Game(HINSTANCE hInstance)
 // --------------------------------------------------------
 Game::~Game()
 {
-	// Release any (and all!) DirectX objects
-	// we've made in the Game class
-	if (vertexBuffer) { vertexBuffer->Release(); }
-	if (indexBuffer) { indexBuffer->Release(); }
 
 	// Delete our simple shader objects, which
 	// will clean up their own internal DirectX stuff
@@ -55,8 +49,8 @@ Game::~Game()
 
 	//Delete meshes
 	delete mesh1;
-	delete mesh2;
-	delete mesh3;
+	/*delete mesh2;
+	delete mesh3;*/
 }
 
 // --------------------------------------------------------
@@ -242,8 +236,10 @@ void Game::Draw(float deltaTime, float totalTime)
 	//    have different geometry.
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
-	vertexBuffer = mesh1->GetVertexBuffer();
-	indexBuffer = mesh1->GetIndexBuffer();
+
+	ID3D11Buffer* vertexBuffer = mesh1->GetVertexBuffer();
+	ID3D11Buffer* indexBuffer = mesh1->GetIndexBuffer();
+
 	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 

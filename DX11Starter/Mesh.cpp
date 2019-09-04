@@ -50,8 +50,8 @@ Mesh::Mesh(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3
 
 Mesh::~Mesh()
 {
-	vertexBuffer->Release();
-	indexBuffer->Release();
+	if (vertexBuffer) { vertexBuffer->Release(); }
+	if (indexBuffer) { indexBuffer->Release(); }
 }
 
 ID3D11Buffer* Mesh::GetVertexBuffer()
