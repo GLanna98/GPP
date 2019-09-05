@@ -238,10 +238,9 @@ void Game::Draw(float deltaTime, float totalTime)
 	UINT offset = 0;
 
 	ID3D11Buffer* vertexBuffer = mesh1->GetVertexBuffer();
-	ID3D11Buffer* indexBuffer = mesh1->GetIndexBuffer();
 
 	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	context->IASetIndexBuffer(mesh1->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
 
 	// Finally do the actual drawing
 	//  - Do this ONCE PER OBJECT you intend to draw
