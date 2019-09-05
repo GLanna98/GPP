@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3D11Device* device)
+Mesh::Mesh(Vertex* vertices, int vertexCount, int* indices, int indexCount, ID3D11Device* device)
 {
 	//Save indexCount to meshIndices
 	meshIndices = indexCount;
@@ -10,7 +10,7 @@ Mesh::Mesh(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3
 	//    it to create the buffer.  The description is then useless.
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = vertexCount;       // 3 = number of vertices in the buffer
+	vbd.ByteWidth = vertexCount * sizeof(Vertex);       // 3 = number of vertices in the buffer
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER; // Tells DirectX this is a vertex buffer
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
@@ -32,7 +32,7 @@ Mesh::Mesh(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3
 	//    it to create the buffer.  The description is then useless.
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = indexCount;         // 3 = number of indices in the buffer
+	ibd.ByteWidth = indexCount * sizeof(int);         // 3 = number of indices in the buffer
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER; // Tells DirectX this is an index buffer
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;

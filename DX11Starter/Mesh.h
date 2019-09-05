@@ -14,7 +14,7 @@ private:
 
 public:
 	//Constructor
-	Mesh(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3D11Device* bufferCreator);
+	Mesh(Vertex* vertices, int vertexCount, int* indices, int indexCount, ID3D11Device* bufferCreator);
 
 	//Destructor
 	virtual ~Mesh();

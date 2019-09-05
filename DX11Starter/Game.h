@@ -33,8 +33,8 @@ private:
 	void CreateBasicGeometry();
 
 	// Buffers to hold actual geometry data
-	ID3D11Buffer* vertexBuffer;
-	ID3D11Buffer* indexBuffer;
+	ID3D11Buffer* vertexBuffer = 0;
+	ID3D11Buffer* indexBuffer = 0;
 
 	// Wrappers for DirectX shaders to provide simplified functionality
 	SimpleVertexShader* vertexShader;
