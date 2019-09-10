@@ -17,5 +17,17 @@ private:
 public:
 	//Constructor
 	Entity(Mesh* meshPtr);
+
+	//Accessors
+	XMFLOAT4X4 GetWorldMatrix();
+	void SetWorldMatrix(XMFLOAT4X4 wM);
+	XMFLOAT3 GetPosition();
+	void SetPostion(XMFLOAT3 pos);
+	XMFLOAT3 GetScale();
+	void SetScale(XMFLOAT3 scl);
+	XMFLOAT3 GetRotation();
+	void SetRotation(XMFLOAT3 rot);
+
+	void Move(float distance, float direction);
 };
 
