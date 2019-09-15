@@ -3,8 +3,8 @@
 //Constructor
 Entity::Entity(Mesh* meshPtr)
 {
-	object = meshPtr;
-	XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixIdentity());
+	mesh = meshPtr;
+	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixIdentity());
 	position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 	rotation = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -22,6 +22,11 @@ void Entity::SetScale(DirectX::XMFLOAT3 scl) { scale = scl; }
 
 DirectX::XMFLOAT3 Entity::GetRotation() { return rotation; }
 void Entity::SetRotation(DirectX::XMFLOAT3 rot) { rotation = rot; }
+
+Mesh* Entity::GetMesh()
+{
+	return mesh;
+}
 
 void Entity::Move(float x, float y, float z)
 {

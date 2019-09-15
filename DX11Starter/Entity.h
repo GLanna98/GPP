@@ -11,7 +11,7 @@ private:
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 scale;
 	DirectX::XMFLOAT3 rotation;
-	Mesh* object;
+	Mesh* mesh;
 public:
 	//Constructor
 	Entity(Mesh* meshPtr);
@@ -25,6 +25,8 @@ public:
 	void SetScale(DirectX::XMFLOAT3 scl);
 	DirectX::XMFLOAT3 GetRotation();
 	void SetRotation(DirectX::XMFLOAT3 rot);
+
+	Mesh* GetMesh();
 
 	//Method to move entity
 	void Move(float x, float y, float z);

@@ -3,6 +3,7 @@
 #include "DXCore.h"
 #include "SimpleShader.h"
 #include "Mesh.h"
+#include "Entity.h"
 #include <DirectXMath.h>
 
 class Game 
@@ -53,5 +54,11 @@ private:
 	Mesh* mesh1 = nullptr;
 	Mesh* mesh2 = nullptr;
 	Mesh* mesh3 = nullptr;
+
+	Entity* entity1 = nullptr;
+	Entity* entity2 = nullptr;
+	Entity* entity3 = nullptr;
+	Entity* entity4 = nullptr;
+	Entity* entity5 = nullptr;
 };
 
