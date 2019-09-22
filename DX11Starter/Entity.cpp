@@ -11,9 +11,6 @@ Entity::Entity(Mesh* meshPtr)
 }
 
 //Accessors
-DirectX::XMFLOAT4X4 Entity::GetWorldMatrix() { return worldMatrix; }
-void Entity::SetWorldMatrix(DirectX::XMFLOAT4X4 wM) { worldMatrix = wM; }
-
 DirectX::XMFLOAT3 Entity::GetPosition() { return position; }
 void Entity::SetPostion(DirectX::XMFLOAT3 pos) {	position = pos; }
 
@@ -23,10 +20,20 @@ void Entity::SetScale(DirectX::XMFLOAT3 scl) { scale = scl; }
 DirectX::XMFLOAT3 Entity::GetRotation() { return rotation; }
 void Entity::SetRotation(DirectX::XMFLOAT3 rot) { rotation = rot; }
 
-Mesh* Entity::GetMesh()
-{
-	return mesh;
+Mesh* Entity::GetMesh() { return mesh; }
+
+DirectX::XMFLOAT4X4 Entity::GetWorldMatrix() 
+{ 
+	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+	DirectX::XMMATRIX rot = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+	DirectX::XMMATRIX scl = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
+
+	DirectX::XMMATRIX world = scl * rot * trans;
+	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(world));
+
+	return worldMatrix; 
 }
+
 
 void Entity::Move(float x, float y, float z)
 {

@@ -291,12 +291,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity1
 
-	XMMATRIX trans1 = XMMatrixTranslation(entity1->GetPosition().x, entity1->GetPosition().y, entity1->GetPosition().z);
-	XMMATRIX rot1 = XMMatrixRotationRollPitchYaw(entity1->GetRotation().x, entity1->GetRotation().y, entity1->GetRotation().z);
-	XMMATRIX scale1 = XMMatrixScaling(entity1->GetScale().x, entity1->GetScale().y, entity1->GetScale().z);
-
-	XMMATRIX world1 = scale1 * rot1 * trans1;
-	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(world1));
+	worldMatrix = entity1->GetWorldMatrix();
 
 	vertexShader->SetMatrix4x4("world", worldMatrix);
 	vertexShader->SetMatrix4x4("view", viewMatrix);
@@ -337,12 +332,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity2
 
-	XMMATRIX trans2 = XMMatrixTranslation(entity2->GetPosition().x, entity2->GetPosition().y, entity2->GetPosition().z);
-	XMMATRIX rot2 = XMMatrixRotationRollPitchYaw(entity2->GetRotation().x, entity2->GetRotation().y, entity2->GetRotation().z);
-	XMMATRIX scale2 = XMMatrixScaling(entity2->GetScale().x, entity2->GetScale().y, entity2->GetScale().z);
-
-	XMMATRIX world2 = scale2 * rot2 * trans2;
-	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(world2));
+	worldMatrix = entity2->GetWorldMatrix();
 
 	vertexShader->SetMatrix4x4("world", worldMatrix);
 	vertexShader->SetMatrix4x4("view", viewMatrix);
@@ -383,12 +373,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity3
 
-	XMMATRIX trans3 = XMMatrixTranslation(entity3->GetPosition().x, entity3->GetPosition().y, entity3->GetPosition().z);
-	XMMATRIX rot3 = XMMatrixRotationRollPitchYaw(entity3->GetRotation().x, entity3->GetRotation().y, entity3->GetRotation().z);
-	XMMATRIX scale3 = XMMatrixScaling(entity3->GetScale().x, entity3->GetScale().y, entity3->GetScale().z);
-
-	XMMATRIX world3 = scale3 * rot3 * trans3;
-	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(world3));
+	worldMatrix = entity3->GetWorldMatrix();
 
 	vertexShader->SetMatrix4x4("world", worldMatrix);
 	vertexShader->SetMatrix4x4("view", viewMatrix);
@@ -429,12 +414,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity4
 
-	XMMATRIX trans4 = XMMatrixTranslation(entity4->GetPosition().x, entity4->GetPosition().y, entity4->GetPosition().z);
-	XMMATRIX rot4 = XMMatrixRotationRollPitchYaw(entity4->GetRotation().x, entity4->GetRotation().y, entity4->GetRotation().z);
-	XMMATRIX scale4 = XMMatrixScaling(entity4->GetScale().x, entity4->GetScale().y, entity4->GetScale().z);
-
-	XMMATRIX world4 = scale4 * rot4 * trans4;
-	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(world4));
+	worldMatrix = entity4->GetWorldMatrix();
 
 	vertexShader->SetMatrix4x4("world", worldMatrix);
 	vertexShader->SetMatrix4x4("view", viewMatrix);
@@ -475,12 +455,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity5
 
-	XMMATRIX trans5 = XMMatrixTranslation(entity5->GetPosition().x, entity5->GetPosition().y, entity5->GetPosition().z);
-	XMMATRIX rot5 = XMMatrixRotationRollPitchYaw(entity5->GetRotation().x, entity5->GetRotation().y, entity5->GetRotation().z);
-	XMMATRIX scale5 = XMMatrixScaling(entity5->GetScale().x, entity5->GetScale().y, entity5->GetScale().z);
-
-	XMMATRIX world5 = scale5 * rot5 * trans5;
-	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(world5));
+	worldMatrix = entity5->GetWorldMatrix();
 
 	vertexShader->SetMatrix4x4("world", worldMatrix);
 	vertexShader->SetMatrix4x4("view", viewMatrix);

@@ -18,7 +18,6 @@ public:
 
 	//Accessors
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
-	void SetWorldMatrix(DirectX::XMFLOAT4X4 wM);
 	DirectX::XMFLOAT3 GetPosition();
 	void SetPostion(DirectX::XMFLOAT3 pos);
 	DirectX::XMFLOAT3 GetScale();
