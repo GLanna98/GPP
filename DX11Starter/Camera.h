@@ -28,6 +28,8 @@ public:
 
 	void Update();
 
-	void UpdateProjectionMatrix();
+	void UpdateProjectionMatrix(float aspectRatio);
+
+	void RotateCamera(int XpixelAmount, int YpixelAmount);
 };
 

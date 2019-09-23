@@ -53,11 +53,16 @@ Game::~Game()
 	delete mesh2;
 	delete mesh3;
 
+	delete material1;
+
 	delete entity1;
 	delete entity2;
 	delete entity3;
 	delete entity4;
 	delete entity5;
+
+	//Delete camera
+	delete gameCamera;
 }
 
 // --------------------------------------------------------
@@ -77,6 +82,9 @@ void Game::Init()
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//initialize camera
+	gameCamera = new Camera();
 }
 
 // --------------------------------------------------------
@@ -127,15 +135,8 @@ void Game::CreateMatrices()
 		up);     // "Up" direction in 3D space (prevents roll)
 	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(V)); // Transpose for HLSL!
 
-	// Create the Projection matrix
-	// - This should match the window's aspect ratio, and also update anytime
-	//    the window resizes (which is already happening in OnResize() below)
-	XMMATRIX P = XMMatrixPerspectiveFovLH(
-		0.25f * 3.1415926535f,		// Field of View Angle
-		(float)width / height,		// Aspect ratio
-		0.1f,						// Near clip plane distance
-		100.0f);					// Far clip plane distance
-	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(P)); // Transpose for HLSL!
+	gameCamera->UpdateProjectionMatrix((float)width / height);
+	projectionMatrix = gameCamera->GetProjectionMatrix();
 }
 
 
@@ -200,11 +201,11 @@ void Game::CreateBasicGeometry()
 	mesh3 = new Mesh(starVertices, 7, starIndices, 9, device);
 
 	//Assign meshes to entities
-	entity1 = new Entity(mesh1);
-	entity2 = new Entity(mesh2);
-	entity3 = new Entity(mesh3);
-	entity4 = new Entity(mesh1);
-	entity5 = new Entity(mesh2);
+	entity1 = new Entity(mesh1, material1);
+	entity2 = new Entity(mesh2, material1);
+	entity3 = new Entity(mesh3, material1);
+	entity4 = new Entity(mesh1, material1);
+	entity5 = new Entity(mesh2, material1);
 
 	//Set entities' starting positions
 	entity1->SetPostion(DirectX::XMFLOAT3(1.0f, 1.5f, 0.0f));
@@ -224,13 +225,8 @@ void Game::OnResize()
 	// Handle base-level DX resize stuff
 	DXCore::OnResize();
 
-	// Update our projection matrix since the window size changed
-	XMMATRIX P = XMMatrixPerspectiveFovLH(
-		0.25f * 3.1415926535f,	// Field of View Angle
-		(float)width / height,	// Aspect ratio
-		0.1f,				  	// Near clip plane distance
-		100.0f);			  	// Far clip plane distance
-	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(P)); // Transpose for HLSL!
+	gameCamera->UpdateProjectionMatrix((float)width / height);
+	projectionMatrix = gameCamera->GetProjectionMatrix();
 }
 
 // --------------------------------------------------------
@@ -241,6 +237,9 @@ void Game::Update(float deltaTime, float totalTime)
 	// Quit if the escape key is pressed
 	if (GetAsyncKeyState(VK_ESCAPE))
 		Quit();
+
+	//Call the camera's update method
+	gameCamera->Update();
 
 	//Rotate entity1
 	XMFLOAT3 e1CurrentRotation = entity1->GetRotation();
@@ -283,6 +282,8 @@ void Game::Draw(float deltaTime, float totalTime)
 		1.0f,
 		0);
 
+	viewMatrix = gameCamera->GetViewMatrix();
+
 	// Send data to shader variables
 	//  - Do this ONCE PER OBJECT you're drawing
 	//  - This is actually a complex process of copying data to a local buffer
@@ -291,23 +292,9 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity1
 
-	worldMatrix = entity1->GetWorldMatrix();
-
-	vertexShader->SetMatrix4x4("world", worldMatrix);
-	vertexShader->SetMatrix4x4("view", viewMatrix);
-	vertexShader->SetMatrix4x4("projection", projectionMatrix);
-
-	// Once you've set all of the data you care to change for
-	// the next draw call, you need to actually send it to the GPU
-	//  - If you skip this, the "SetMatrix" calls above won't make it to the GPU!
-	vertexShader->CopyAllBufferData();
-
-	// Set the vertex and pixel shaders to use for the next Draw() command
-	//  - These don't technically need to be set every frame...YET
-	//  - Once you start applying different shaders to different objects,
-	//    you'll need to swap the current shaders before each draw
-	vertexShader->SetShader();
-	pixelShader->SetShader();
+	entity1->PrepareMaterial(viewMatrix, projectionMatrix);
+	vertexShader = entity1->GetMaterial()->GetVertexShader();
+	pixelShader = entity1->GetMaterial()->GetPixelShader();
 
 	// Set buffers in the input assembler
 	//  - Do this ONCE PER OBJECT you're drawing, since each object might
@@ -332,23 +319,9 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity2
 
-	worldMatrix = entity2->GetWorldMatrix();
-
-	vertexShader->SetMatrix4x4("world", worldMatrix);
-	vertexShader->SetMatrix4x4("view", viewMatrix);
-	vertexShader->SetMatrix4x4("projection", projectionMatrix);
-
-	// Once you've set all of the data you care to change for
-	// the next draw call, you need to actually send it to the GPU
-	//  - If you skip this, the "SetMatrix" calls above won't make it to the GPU!
-	vertexShader->CopyAllBufferData();
-
-	// Set the vertex and pixel shaders to use for the next Draw() command
-	//  - These don't technically need to be set every frame...YET
-	//  - Once you start applying different shaders to different objects,
-	//    you'll need to swap the current shaders before each draw
-	vertexShader->SetShader();
-	pixelShader->SetShader();
+	entity2->PrepareMaterial(viewMatrix, projectionMatrix);
+	vertexShader = entity2->GetMaterial()->GetVertexShader();
+	pixelShader = entity2->GetMaterial()->GetPixelShader();
 
 	// Set buffers in the input assembler
 	//  - Do this ONCE PER OBJECT you're drawing, since each object might
@@ -373,23 +346,9 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity3
 
-	worldMatrix = entity3->GetWorldMatrix();
-
-	vertexShader->SetMatrix4x4("world", worldMatrix);
-	vertexShader->SetMatrix4x4("view", viewMatrix);
-	vertexShader->SetMatrix4x4("projection", projectionMatrix);
-
-	// Once you've set all of the data you care to change for
-	// the next draw call, you need to actually send it to the GPU
-	//  - If you skip this, the "SetMatrix" calls above won't make it to the GPU!
-	vertexShader->CopyAllBufferData();
-
-	// Set the vertex and pixel shaders to use for the next Draw() command
-	//  - These don't technically need to be set every frame...YET
-	//  - Once you start applying different shaders to different objects,
-	//    you'll need to swap the current shaders before each draw
-	vertexShader->SetShader();
-	pixelShader->SetShader();
+	entity3->PrepareMaterial(viewMatrix, projectionMatrix);
+	vertexShader = entity3->GetMaterial()->GetVertexShader();
+	pixelShader = entity3->GetMaterial()->GetPixelShader();
 
 	// Set buffers in the input assembler
 	//  - Do this ONCE PER OBJECT you're drawing, since each object might
@@ -414,23 +373,9 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity4
 
-	worldMatrix = entity4->GetWorldMatrix();
-
-	vertexShader->SetMatrix4x4("world", worldMatrix);
-	vertexShader->SetMatrix4x4("view", viewMatrix);
-	vertexShader->SetMatrix4x4("projection", projectionMatrix);
-
-	// Once you've set all of the data you care to change for
-	// the next draw call, you need to actually send it to the GPU
-	//  - If you skip this, the "SetMatrix" calls above won't make it to the GPU!
-	vertexShader->CopyAllBufferData();
-
-	// Set the vertex and pixel shaders to use for the next Draw() command
-	//  - These don't technically need to be set every frame...YET
-	//  - Once you start applying different shaders to different objects,
-	//    you'll need to swap the current shaders before each draw
-	vertexShader->SetShader();
-	pixelShader->SetShader();
+	entity4->PrepareMaterial(viewMatrix, projectionMatrix);
+	vertexShader = entity4->GetMaterial()->GetVertexShader();
+	pixelShader = entity4->GetMaterial()->GetPixelShader();
 
 	// Set buffers in the input assembler
 	//  - Do this ONCE PER OBJECT you're drawing, since each object might
@@ -455,23 +400,9 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	//-------------------------------------Entity5
 
-	worldMatrix = entity5->GetWorldMatrix();
-
-	vertexShader->SetMatrix4x4("world", worldMatrix);
-	vertexShader->SetMatrix4x4("view", viewMatrix);
-	vertexShader->SetMatrix4x4("projection", projectionMatrix);
-
-	// Once you've set all of the data you care to change for
-	// the next draw call, you need to actually send it to the GPU
-	//  - If you skip this, the "SetMatrix" calls above won't make it to the GPU!
-	vertexShader->CopyAllBufferData();
-
-	// Set the vertex and pixel shaders to use for the next Draw() command
-	//  - These don't technically need to be set every frame...YET
-	//  - Once you start applying different shaders to different objects,
-	//    you'll need to swap the current shaders before each draw
-	vertexShader->SetShader();
-	pixelShader->SetShader();
+	entity5->PrepareMaterial(viewMatrix, projectionMatrix);
+	vertexShader = entity5->GetMaterial()->GetVertexShader();
+	pixelShader = entity5->GetMaterial()->GetPixelShader();
 
 	// Set buffers in the input assembler
 	//  - Do this ONCE PER OBJECT you're drawing, since each object might
@@ -546,7 +477,13 @@ void Game::OnMouseUp(WPARAM buttonState, int x, int y)
 void Game::OnMouseMove(WPARAM buttonState, int x, int y)
 {
 	// Add any custom code here...
+	if (buttonState & 0x0001)
+	{
+		int xRotation = x - prevMousePos.x;
+		int yRotation = y - prevMousePos.y;
 
+		gameCamera->RotateCamera(xRotation, yRotation);
+	}
 	// Save the previous mouse position, so we have it for the future
 	prevMousePos.x = x;
 	prevMousePos.y = y;

@@ -4,6 +4,8 @@
 #include "SimpleShader.h"
 #include "Mesh.h"
 #include "Entity.h"
+#include "Camera.h"
+#include "Material.h"
 #include <DirectXMath.h>
 
 class Game 
@@ -55,10 +57,14 @@ private:
 	Mesh* mesh2 = nullptr;
 	Mesh* mesh3 = nullptr;
 
+	Material* material1 = nullptr;
+
 	Entity* entity1 = nullptr;
 	Entity* entity2 = nullptr;
 	Entity* entity3 = nullptr;
 	Entity* entity4 = nullptr;
 	Entity* entity5 = nullptr;
+
+	Camera* gameCamera = nullptr;
 };
 

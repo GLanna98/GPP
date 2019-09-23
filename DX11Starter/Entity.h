@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 
 #include "Mesh.h"
+#include "Material.h"
 
 class Entity
 {
@@ -12,9 +13,10 @@ private:
 	DirectX::XMFLOAT3 scale;
 	DirectX::XMFLOAT3 rotation;
 	Mesh* mesh;
+	Material* material;
 public:
 	//Constructor
-	Entity(Mesh* meshPtr);
+	Entity(Mesh* meshPtr, Material* matPtr);
 
 	//Accessors
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
@@ -26,6 +28,9 @@ public:
 	void SetRotation(DirectX::XMFLOAT3 rot);
 
 	Mesh* GetMesh();
+
+	Material* GetMaterial();
+	void PrepareMaterial(DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectionMatrix);
 
 	//Method to move entity
 	void Move(float x, float y, float z);

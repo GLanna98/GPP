@@ -1,9 +1,10 @@
 #include "Entity.h"
 
 //Constructor
-Entity::Entity(Mesh* meshPtr)
+Entity::Entity(Mesh* meshPtr, Material* matPtr)
 {
 	mesh = meshPtr;
+	material = matPtr;
 	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixIdentity());
 	position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
@@ -21,6 +22,21 @@ DirectX::XMFLOAT3 Entity::GetRotation() { return rotation; }
 void Entity::SetRotation(DirectX::XMFLOAT3 rot) { rotation = rot; }
 
 Mesh* Entity::GetMesh() { return mesh; }
+
+Material* Entity::GetMaterial() { return material; }
+
+void Entity::PrepareMaterial(DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectionMatrix)
+{
+	material->GetVertexShader()->SetMatrix4x4("world", worldMatrix);
+	material->GetVertexShader()->SetMatrix4x4("view", viewMatrix);
+	material->GetVertexShader()->SetMatrix4x4("projection", projectionMatrix);
+
+	material->GetPixelShader()->SetShader();
+	material->GetPixelShader()->CopyAllBufferData();
+
+	material->GetVertexShader()->SetShader();
+	material->GetVertexShader()->CopyAllBufferData();
+}
 
 DirectX::XMFLOAT4X4 Entity::GetWorldMatrix() 
 { 
@@ -43,4 +59,6 @@ void Entity::Move(float x, float y, float z)
 
 Entity::~Entity()
 {
+	delete mesh;
+	delete material;
 }
