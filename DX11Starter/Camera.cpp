@@ -2,6 +2,7 @@
 
 DirectX::XMFLOAT4X4 Camera::GetViewMatrix() { return viewMatrix; }
 DirectX::XMFLOAT4X4 Camera::GetProjectionMatrix() { return projectionMatrix; }
+DirectX::XMFLOAT3 Camera::GetPosition() { return cameraPosition; }
 
 Camera::Camera()
 {
@@ -12,7 +13,7 @@ Camera::Camera()
 	yRotation = 0.0f;
 }
 
-void Camera::Update()
+void Camera::Update(float deltaTime, float totalTime)
 {	
 	DirectX::XMStoreFloat3(&cameraDirection, DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&forward), DirectX::XMQuaternionRotationRollPitchYaw(xRotation, yRotation, 0.0f)));
 
@@ -25,27 +26,27 @@ void Camera::Update()
 	//Camera Movement
 	if (GetAsyncKeyState('W') & 0x8000) 
 	{
-		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMLoadFloat3(&cameraDirection)));
+ 		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(DirectX::XMLoadFloat3(&cameraDirection), 2*deltaTime)));
 	}
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
-		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMLoadFloat3(&cameraDirection)));
+		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(DirectX::XMLoadFloat3(&cameraDirection), 2*deltaTime)));
 	}
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
-		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&cameraPosition), sideVector));
+		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(sideVector, 2*deltaTime)));
 	}
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&cameraPosition), sideVector));
+		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(sideVector, 2*deltaTime)));
 	}
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
-		cameraPosition.y += 1;
+		cameraPosition.y += 1 * 2*deltaTime;
 	}
 	if (GetAsyncKeyState('X') & 0x8000)
 	{
-		cameraPosition.y -= 1;
+		cameraPosition.y -= 1 * 2*deltaTime;
 	}
 }
 

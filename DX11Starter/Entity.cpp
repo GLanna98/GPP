@@ -59,6 +59,4 @@ void Entity::Move(float x, float y, float z)
 
 Entity::~Entity()
 {
-	delete mesh;
-	delete material;
 }

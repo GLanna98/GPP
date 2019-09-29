@@ -85,6 +85,25 @@ void Game::Init()
 
 	//initialize camera
 	gameCamera = new Camera();
+
+	// Create the View matrix
+	// - In an actual game, recreate this matrix every time the camera 
+	//    moves (potentially every frame)
+	// - We're using the LOOK TO function, which takes the position of the
+	//    camera and the direction vector along which to look (as well as "up")
+	// - Another option is the LOOK AT function, to look towards a specific
+	//    point in 3D space
+	XMVECTOR pos = XMVectorSet(0, 0, -5, 0);
+	XMVECTOR dir = XMVectorSet(0, 0, 1, 0);
+	XMVECTOR up = XMVectorSet(0, 1, 0, 0);
+	XMMATRIX V = XMMatrixLookToLH(
+		pos,     // The position of the "camera"
+		dir,     // Direction the camera is looking
+		up);     // "Up" direction in 3D space (prevents roll)
+	DirectX::XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(V)); // Transpose for HLSL!
+
+	gameCamera->UpdateProjectionMatrix((float)width / height);
+	projectionMatrix = gameCamera->GetProjectionMatrix();
 }
 
 // --------------------------------------------------------
@@ -117,26 +136,7 @@ void Game::CreateMatrices()
 	//    an identity matrix.  This is just to show that HLSL expects a different
 	//    matrix (column major vs row major) than the DirectX Math library
 	XMMATRIX W = XMMatrixIdentity();
-	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(W)); // Transpose for HLSL!
-
-	// Create the View matrix
-	// - In an actual game, recreate this matrix every time the camera 
-	//    moves (potentially every frame)
-	// - We're using the LOOK TO function, which takes the position of the
-	//    camera and the direction vector along which to look (as well as "up")
-	// - Another option is the LOOK AT function, to look towards a specific
-	//    point in 3D space
-	XMVECTOR pos = XMVectorSet(0, 0, -5, 0);
-	XMVECTOR dir = XMVectorSet(0, 0, 1, 0);
-	XMVECTOR up = XMVectorSet(0, 1, 0, 0);
-	XMMATRIX V = XMMatrixLookToLH(
-		pos,     // The position of the "camera"
-		dir,     // Direction the camera is looking
-		up);     // "Up" direction in 3D space (prevents roll)
-	XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(V)); // Transpose for HLSL!
-
-	gameCamera->UpdateProjectionMatrix((float)width / height);
-	projectionMatrix = gameCamera->GetProjectionMatrix();
+	DirectX::XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(W)); // Transpose for HLSL!
 }
 
 
@@ -200,6 +200,8 @@ void Game::CreateBasicGeometry()
 
 	mesh3 = new Mesh(starVertices, 7, starIndices, 9, device);
 
+	material1 = new Material(pixelShader, vertexShader);
+
 	//Assign meshes to entities
 	entity1 = new Entity(mesh1, material1);
 	entity2 = new Entity(mesh2, material1);
@@ -239,29 +241,33 @@ void Game::Update(float deltaTime, float totalTime)
 		Quit();
 
 	//Call the camera's update method
-	gameCamera->Update();
+	gameCamera->Update(deltaTime, totalTime);
 
-	//Rotate entity1
-	XMFLOAT3 e1CurrentRotation = entity1->GetRotation();
-	e1CurrentRotation.z += 0.3f * deltaTime;
-	entity1->SetRotation(e1CurrentRotation);
+	////Rotate entity1
+	//XMFLOAT3 e1CurrentRotation = entity1->GetRotation();
+	//e1CurrentRotation.z += 0.3f * deltaTime;
+	//entity1->SetRotation(e1CurrentRotation);
 
-	//Move entity2 to the right
-	entity2->Move(0.2f * deltaTime, 0.0f, 0.0f);
+	////Move entity2 to the right
+	//entity2->Move(0.2f * deltaTime, 0.0f, 0.0f);
 
-	//Move enitity3 diagonally up to the right
-	entity3->Move(0.1f * deltaTime, 0.05f * deltaTime, 0.0f);
+	////Move enitity3 diagonally up to the right
+	//entity3->Move(0.1f * deltaTime, 0.05f * deltaTime, 0.0f);
 
-	//Move entity4 to the left while spinning it clockwise
-	XMFLOAT3 e4CurrentRotation = entity4->GetRotation();
-	e4CurrentRotation.z -= 0.2f * deltaTime;
-	entity4->SetRotation(e4CurrentRotation);
-	entity4->Move(-0.2f * deltaTime, 0.0f, 0.0f);
+	////Move entity4 to the left while spinning it clockwise
+	//XMFLOAT3 e4CurrentRotation = entity4->GetRotation();
+	//e4CurrentRotation.z -= 0.2f * deltaTime;
+	//entity4->SetRotation(e4CurrentRotation);
+	//entity4->Move(-0.2f * deltaTime, 0.0f, 0.0f);
 
-	//Scale entity5 vertically
-	XMFLOAT3 e5CurrentScale = entity5->GetScale();
-	e5CurrentScale.y += 0.1f * deltaTime;
-	entity5->SetScale(e5CurrentScale);
+	////Scale entity5 vertically
+	//XMFLOAT3 e5CurrentScale = entity5->GetScale();
+	//e5CurrentScale.y += 0.1f * deltaTime;
+	//entity5->SetScale(e5CurrentScale);
+
+	char msgbuf[100];
+	sprintf_s(msgbuf, "X: %d - Y: %d - Z: %d\n", (int)gameCamera->GetPosition().x, (int)gameCamera->GetPosition().y, (int)gameCamera->GetPosition().z);
+	OutputDebugString(msgbuf);
 }
 
 // --------------------------------------------------------
@@ -282,7 +288,8 @@ void Game::Draw(float deltaTime, float totalTime)
 		1.0f,
 		0);
 
-	viewMatrix = gameCamera->GetViewMatrix();
+	/*viewMatrix = gameCamera->GetViewMatrix();
+	projectionMatrix = gameCamera->GetProjectionMatrix();*/
 
 	// Send data to shader variables
 	//  - Do this ONCE PER OBJECT you're drawing

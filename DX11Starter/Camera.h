@@ -23,10 +23,11 @@ private:
 public:
 	DirectX::XMFLOAT4X4 GetViewMatrix();
 	DirectX::XMFLOAT4X4 GetProjectionMatrix();
+	DirectX::XMFLOAT3 GetPosition();
 
 	Camera();
 
-	void Update();
+	void Update(float deltaTime, float totalTime);
 
 	void UpdateProjectionMatrix(float aspectRatio);
 
