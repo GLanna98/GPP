@@ -21,27 +21,27 @@ void Camera::Update(float deltaTime, float totalTime)
 	//Camera Movement
 	if (GetAsyncKeyState('W') & 0x8000) 
 	{
- 		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(DirectX::XMLoadFloat3(&cameraDirection), 2*deltaTime)));
+		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(DirectX::XMLoadFloat3(&cameraDirection), 2 * deltaTime)));
 	}
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
-		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(DirectX::XMLoadFloat3(&cameraDirection), 2*deltaTime)));
+		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(DirectX::XMLoadFloat3(&cameraDirection), 2 * deltaTime)));
 	}
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
-		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(sideVector, 2*deltaTime)));
+		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(sideVector, 2 * deltaTime)));
 	}
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(sideVector, 2*deltaTime)));
+		DirectX::XMStoreFloat3(&cameraPosition, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMVectorScale(sideVector, 2 * deltaTime)));
 	}
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
-		cameraPosition.y += 1 * 2*deltaTime;
+		cameraPosition.y += 1 * 2 * deltaTime;
 	}
 	if (GetAsyncKeyState('X') & 0x8000)
 	{
-		cameraPosition.y -= 1 * 2*deltaTime;
+		cameraPosition.y -= 1 * 2 * deltaTime;
 	}
 
 	DirectX::XMStoreFloat3(&cameraDirection, DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&forward), DirectX::XMQuaternionRotationRollPitchYaw(yRotation, xRotation, 0.0f)));
