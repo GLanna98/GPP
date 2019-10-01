@@ -17,7 +17,7 @@ private:
 
 	//Defaults
 	DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f);
+	DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 	DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
 
 public:

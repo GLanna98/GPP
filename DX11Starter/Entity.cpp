@@ -27,6 +27,8 @@ Material* Entity::GetMaterial() { return material; }
 
 void Entity::PrepareMaterial(DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projectionMatrix)
 {
+	worldMatrix = GetWorldMatrix();
+
 	material->GetVertexShader()->SetMatrix4x4("world", worldMatrix);
 	material->GetVertexShader()->SetMatrix4x4("view", viewMatrix);
 	material->GetVertexShader()->SetMatrix4x4("projection", projectionMatrix);

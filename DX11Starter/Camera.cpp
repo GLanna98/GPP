@@ -7,7 +7,7 @@ DirectX::XMFLOAT3 Camera::GetPosition() { return cameraPosition; }
 Camera::Camera()
 {
 	cameraDirection = forward;
-	cameraPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	cameraPosition = DirectX::XMFLOAT3(0.0f, 0.0f, -5.0f);
 
 	xRotation = 0.0f;
 	yRotation = 0.0f;
@@ -15,14 +15,9 @@ Camera::Camera()
 
 void Camera::Update(float deltaTime, float totalTime)
 {	
-	DirectX::XMStoreFloat3(&cameraDirection, DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&forward), DirectX::XMQuaternionRotationRollPitchYaw(xRotation, yRotation, 0.0f)));
-
 	DirectX::XMMATRIX newViewMatrix = DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&cameraPosition), DirectX::XMLoadFloat3(&cameraDirection), DirectX::XMLoadFloat3(&up));
 
-	DirectX::XMStoreFloat4x4(&viewMatrix, newViewMatrix);
-
 	DirectX::XMVECTOR sideVector = DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&cameraDirection), DirectX::XMLoadFloat3(&up));
-
 	//Camera Movement
 	if (GetAsyncKeyState('W') & 0x8000) 
 	{
@@ -48,6 +43,10 @@ void Camera::Update(float deltaTime, float totalTime)
 	{
 		cameraPosition.y -= 1 * 2*deltaTime;
 	}
+
+	DirectX::XMStoreFloat3(&cameraDirection, DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&forward), DirectX::XMQuaternionRotationRollPitchYaw(yRotation, xRotation, 0.0f)));
+
+	DirectX::XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(newViewMatrix));
 }
 
 void Camera::UpdateProjectionMatrix(float aspectRatio)
@@ -62,9 +61,9 @@ void Camera::UpdateProjectionMatrix(float aspectRatio)
 
 void Camera::RotateCamera(int XpixelAmount, int YpixelAmount)
 {
-	xRotation += (float)XpixelAmount * (DirectX::XM_PI / 180.0f);
+	xRotation += (float)XpixelAmount * (DirectX::XM_PI / 180.0f) * 0.2f;
 	xRotation = fmod(xRotation, DirectX::XM_2PI);
 
-	yRotation += (float)YpixelAmount * (DirectX::XM_PI / 180.0f);
+	yRotation += (float)YpixelAmount * (DirectX::XM_PI / 180.0f) * 0.2f;
 	yRotation = fmod(yRotation, DirectX::XM_2PI);
 }

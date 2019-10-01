@@ -243,31 +243,27 @@ void Game::Update(float deltaTime, float totalTime)
 	//Call the camera's update method
 	gameCamera->Update(deltaTime, totalTime);
 
-	////Rotate entity1
-	//XMFLOAT3 e1CurrentRotation = entity1->GetRotation();
-	//e1CurrentRotation.z += 0.3f * deltaTime;
-	//entity1->SetRotation(e1CurrentRotation);
+	//Rotate entity1
+	XMFLOAT3 e1CurrentRotation = entity1->GetRotation();
+	e1CurrentRotation.z += 0.3f * deltaTime;
+	entity1->SetRotation(e1CurrentRotation);
 
-	////Move entity2 to the right
-	//entity2->Move(0.2f * deltaTime, 0.0f, 0.0f);
+	//Move entity2 to the right
+	entity2->Move(0.2f * deltaTime, 0.0f, 0.0f);
 
-	////Move enitity3 diagonally up to the right
-	//entity3->Move(0.1f * deltaTime, 0.05f * deltaTime, 0.0f);
+	//Move enitity3 diagonally up to the right
+	entity3->Move(0.1f * deltaTime, 0.05f * deltaTime, 0.0f);
 
-	////Move entity4 to the left while spinning it clockwise
-	//XMFLOAT3 e4CurrentRotation = entity4->GetRotation();
-	//e4CurrentRotation.z -= 0.2f * deltaTime;
-	//entity4->SetRotation(e4CurrentRotation);
-	//entity4->Move(-0.2f * deltaTime, 0.0f, 0.0f);
+	//Move entity4 to the left while spinning it clockwise
+	XMFLOAT3 e4CurrentRotation = entity4->GetRotation();
+	e4CurrentRotation.z -= 0.2f * deltaTime;
+	entity4->SetRotation(e4CurrentRotation);
+	entity4->Move(-0.2f * deltaTime, 0.0f, 0.0f);
 
-	////Scale entity5 vertically
-	//XMFLOAT3 e5CurrentScale = entity5->GetScale();
-	//e5CurrentScale.y += 0.1f * deltaTime;
-	//entity5->SetScale(e5CurrentScale);
-
-	char msgbuf[100];
-	sprintf_s(msgbuf, "X: %d - Y: %d - Z: %d\n", (int)gameCamera->GetPosition().x, (int)gameCamera->GetPosition().y, (int)gameCamera->GetPosition().z);
-	OutputDebugString(msgbuf);
+	//Scale entity5 vertically
+	XMFLOAT3 e5CurrentScale = entity5->GetScale();
+	e5CurrentScale.y += 0.1f * deltaTime;
+	entity5->SetScale(e5CurrentScale);
 }
 
 // --------------------------------------------------------
@@ -288,8 +284,8 @@ void Game::Draw(float deltaTime, float totalTime)
 		1.0f,
 		0);
 
-	/*viewMatrix = gameCamera->GetViewMatrix();
-	projectionMatrix = gameCamera->GetProjectionMatrix();*/
+	viewMatrix = gameCamera->GetViewMatrix();
+	projectionMatrix = gameCamera->GetProjectionMatrix();
 
 	// Send data to shader variables
 	//  - Do this ONCE PER OBJECT you're drawing
