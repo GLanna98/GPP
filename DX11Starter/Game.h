@@ -56,6 +56,7 @@ private:
 	Mesh* mesh1 = nullptr;
 	Mesh* mesh2 = nullptr;
 	Mesh* mesh3 = nullptr;
+	Mesh* mesh4 = nullptr;
 
 	Material* material1 = nullptr;
 

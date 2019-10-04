@@ -19,7 +19,7 @@ private:
 public:
 	//Constructor
 	Mesh(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3D11Device* device);
-	Mesh(char* fileName, ID3D11Device* device);
+	Mesh(const char* fileName, ID3D11Device* device);
 
 	//Destructor
 	virtual ~Mesh();

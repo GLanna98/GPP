@@ -53,7 +53,7 @@ Mesh::Mesh(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3
 	CreateBuffers(vertices, vertexCount, indices, indexCount, device);
 }
 
-Mesh::Mesh(char* fileName, ID3D11Device* device)
+Mesh::Mesh(const char* fileName, ID3D11Device* device)
 {
 	// File input object
 	std::ifstream obj(fileName);

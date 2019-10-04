@@ -52,6 +52,7 @@ Game::~Game()
 	delete mesh1;
 	delete mesh2;
 	delete mesh3;
+	delete mesh4;
 
 	delete material1;
 
@@ -200,6 +201,8 @@ void Game::CreateBasicGeometry()
 
 	mesh3 = new Mesh(starVertices, 7, (UINT*)starIndices, 9, device);
 
+	mesh4 = new Mesh("sphere.obj", device);
+
 	material1 = new Material(pixelShader, vertexShader);
 
 	//Assign meshes to entities
@@ -207,7 +210,7 @@ void Game::CreateBasicGeometry()
 	entity2 = new Entity(mesh2, material1);
 	entity3 = new Entity(mesh3, material1);
 	entity4 = new Entity(mesh1, material1);
-	entity5 = new Entity(mesh2, material1);
+	entity5 = new Entity(mesh4, material1);
 
 	//Set entities' starting positions
 	entity1->SetPostion(DirectX::XMFLOAT3(1.0f, 1.5f, 0.0f));
@@ -316,7 +319,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
 	//     vertices in the currently set VERTEX BUFFER
 	context->DrawIndexed(
-		3,     // The number of indices to use (we could draw a subset if we wanted)
+		entity1->GetMesh()->GetIndexCount(),     // The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
 
@@ -343,7 +346,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
 	//     vertices in the currently set VERTEX BUFFER
 	context->DrawIndexed(
-		6,     // The number of indices to use (we could draw a subset if we wanted)
+		entity2->GetMesh()->GetIndexCount(),     // The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
 
@@ -370,7 +373,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
 	//     vertices in the currently set VERTEX BUFFER
 	context->DrawIndexed(
-		9,     // The number of indices to use (we could draw a subset if we wanted)
+		entity3->GetMesh()->GetIndexCount(),     // The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
 
@@ -397,7 +400,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
 	//     vertices in the currently set VERTEX BUFFER
 	context->DrawIndexed(
-		3,     // The number of indices to use (we could draw a subset if we wanted)
+		entity4->GetMesh()->GetIndexCount(),     // The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
 
@@ -424,7 +427,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
 	     vertices in the currently set VERTEX BUFFER*/
 	context->DrawIndexed(
-		6,     // The number of indices to use (we could draw a subset if we wanted)
+		entity5->GetMesh()->GetIndexCount(),     // The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
 
