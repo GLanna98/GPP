@@ -62,8 +62,8 @@ void Camera::UpdateProjectionMatrix(float aspectRatio)
 void Camera::RotateCamera(int XpixelAmount, int YpixelAmount)
 {
 	xRotation += (float)XpixelAmount * (DirectX::XM_PI / 180.0f) * 0.2f;
-	xRotation = fmod(xRotation, DirectX::XM_2PI);
+	xRotation = (float)fmod(xRotation, DirectX::XM_2PI);
 
 	yRotation += (float)YpixelAmount * (DirectX::XM_PI / 180.0f) * 0.2f;
-	yRotation = fmod(yRotation, DirectX::XM_2PI);
+	yRotation = (float)fmod(yRotation, DirectX::XM_2PI);
 }

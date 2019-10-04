@@ -1,5 +1,7 @@
 #pragma once
 #include <d3d11.h>
+#include <vector>
+#include <fstream>
 
 #include "Vertex.h"
 class Mesh
@@ -10,11 +12,14 @@ private:
 	ID3D11Buffer* indexBuffer = nullptr;
 
 	//Integer specifying how many indices are in the mesh's index buffer
-	int meshIndices;
+	int meshIndices = 0;
+
+	void CreateBuffers(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3D11Device* device);
 
 public:
 	//Constructor
-	Mesh(Vertex* vertices, int vertexCount, int* indices, int indexCount, ID3D11Device* bufferCreator);
+	Mesh(Vertex* vertices, int vertexCount, UINT* indices, int indexCount, ID3D11Device* device);
+	Mesh(char* fileName, ID3D11Device* device);
 
 	//Destructor
 	virtual ~Mesh();

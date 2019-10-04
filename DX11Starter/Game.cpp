@@ -169,7 +169,7 @@ void Game::CreateBasicGeometry()
 	// - But just to see how it's done...
 	int triangleIndices[] = { 0, 1, 2 };
 
-	mesh1 = new Mesh(triangleVertices, 3, triangleIndices, 3, device);
+	mesh1 = new Mesh(triangleVertices, 3, (UINT*)triangleIndices, 3, device);
 
 	Vertex squareVertices[] =
 	{
@@ -181,7 +181,7 @@ void Game::CreateBasicGeometry()
 
 	int squareIndices[] = { 0, 1, 2, 3, 2, 1 };
 
-	mesh2 = new Mesh(squareVertices, 4, squareIndices, 6, device);
+	mesh2 = new Mesh(squareVertices, 4, (UINT*)squareIndices, 6, device);
 
 	Vertex starVertices[] =
 	{
@@ -198,7 +198,7 @@ void Game::CreateBasicGeometry()
 
 	int starIndices[] = { 0, 1, 2, 3, 4, 5, 6, 2, 5 };
 
-	mesh3 = new Mesh(starVertices, 7, starIndices, 9, device);
+	mesh3 = new Mesh(starVertices, 7, (UINT*)starIndices, 9, device);
 
 	material1 = new Material(pixelShader, vertexShader);
 
