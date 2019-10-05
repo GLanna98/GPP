@@ -40,15 +40,19 @@ void Entity::PrepareMaterial(DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4
 	material->GetVertexShader()->CopyAllBufferData();
 }
 
-DirectX::XMFLOAT4X4 Entity::GetWorldMatrix() 
-{ 
+void Entity::UpdateWorldMatrix()
+{
 	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 	DirectX::XMMATRIX rot = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
 	DirectX::XMMATRIX scl = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
 
 	DirectX::XMMATRIX world = scl * rot * trans;
 	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(world));
+}
 
+DirectX::XMFLOAT4X4 Entity::GetWorldMatrix() 
+{ 
+	UpdateWorldMatrix();
 	return worldMatrix; 
 }
 

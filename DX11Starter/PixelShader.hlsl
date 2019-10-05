@@ -17,6 +17,13 @@ struct VertexToPixel
 	float2 uv			: UV;
 };
 
+struct DirectionalLight
+{
+	float4 AmbientColor;
+	float4 DiffuseColor;
+	float3 Direction;
+};
+
 // --------------------------------------------------------
 // The entry point (main method) for our pixel shader
 // 
@@ -28,9 +35,6 @@ struct VertexToPixel
 // --------------------------------------------------------
 float4 main(VertexToPixel input) : SV_TARGET
 {
-	// Just return the input color
-	// - This color (like most values passing through the rasterizer) is 
-	//   interpolated for each pixel between the corresponding vertices 
-	//   of the triangle we're rendering
+	input.normal = normalize(input.normal);
 	return float4(1,0,0,1);
 }

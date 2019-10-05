@@ -35,6 +35,8 @@ public:
 	//Method to move entity
 	void Move(float x, float y, float z);
 
+	void UpdateWorldMatrix();
+
 	//Destructor
 	virtual ~Entity();
 };

@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Camera.h"
 #include "Material.h"
+#include "Light.h"
 #include <DirectXMath.h>
 
 class Game 
@@ -52,20 +53,15 @@ private:
 	// determining how far the mouse moved in a single frame.
 	POINT prevMousePos;
 
-	//Meshes to be drawn
-	Mesh* mesh1 = nullptr;
-	Mesh* mesh2 = nullptr;
-	Mesh* mesh3 = nullptr;
-	Mesh* mesh4 = nullptr;
+	std::vector<Mesh*> meshes;
+	int meshCount;
 
 	Material* material1 = nullptr;
 
-	Entity* entity1 = nullptr;
-	Entity* entity2 = nullptr;
-	Entity* entity3 = nullptr;
-	Entity* entity4 = nullptr;
-	Entity* entity5 = nullptr;
+	std::vector<Entity*> entities;
+	int entityCount;
 
 	Camera* gameCamera = nullptr;
-};
 
+	DirectionalLight dLight;
+};
