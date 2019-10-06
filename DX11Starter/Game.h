@@ -63,5 +63,6 @@ private:
 
 	Camera* gameCamera = nullptr;
 
-	DirectionalLight dLight;
+	DirectionalLight dLight1;
+	DirectionalLight dLight2;
 };

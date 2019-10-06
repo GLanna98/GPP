@@ -44,7 +44,7 @@ struct VertexToPixel
 	//  v    v                v
 	float4 position		: SV_POSITION;	// XYZW position (System Value Position)
 	//float4 color		: COLOR;        // RGBA color
-	float3 normal		: NORMAL;`
+	float3 normal		: NORMAL;
 	float2 uv			: UV;
 };
 
@@ -82,6 +82,7 @@ VertexToPixel main( VertexShaderInput input )
 	//output.color = input.color;
 
 	output.normal = mul( input.normal, (float3x3)world );
+	output.normal = normalize(output.normal);
 	output.uv = input.uv;
 
 	// Whatever we return will make its way through the pipeline to the

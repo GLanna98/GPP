@@ -25,7 +25,8 @@ Game::Game(HINSTANCE hInstance)
 	vertexShader = 0;
 	pixelShader = 0;
 
-	dLight = {};
+	dLight1 = {};
+	dLight2 = {};
 
 	meshCount = 4;
 	entityCount = 4;
@@ -104,7 +105,8 @@ void Game::Init()
 	gameCamera->UpdateProjectionMatrix((float)width / height);
 	projectionMatrix = gameCamera->GetProjectionMatrix();
 
-	dLight = { XMFLOAT4(0.1f, 0.1f, 0.1f, 0.1f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(1.0f, -1.0f, 0.0f) };
+	dLight1 = { XMFLOAT4(0.1f, 0.1f, 0.1f, 0.1f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(1.0f, -1.0f, 0.0f) };
+	dLight2 = { XMFLOAT4(0.1f, 0.1f, 0.1f, 0.1f), XMFLOAT4(0.4f, 0.8f, 0.35f, 1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) };
 }
 
 // --------------------------------------------------------
@@ -153,36 +155,9 @@ void Game::CreateBasicGeometry()
 	XMFLOAT4 blue = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	XMFLOAT4 yellow = XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
 
-	// Set up the vertices of the triangle we would like to draw
-	// - We're going to copy this array, exactly as it exists in memory
-	//    over to a DirectX-controlled data structure (the vertex buffer)
-	Vertex triangleVertices[] =
-	{
-		{ XMFLOAT3(+0.0f, +1.0f, +0.0f), XMFLOAT3(0, 0, -1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3(+1.0f, -1.0f, +0.0f), XMFLOAT3(0, 0, -1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3(-1.0f, -1.0f, +0.0f), XMFLOAT3(0, 0, -1), XMFLOAT2(0, 0) }
-	};
+	meshes.push_back(new Mesh("cube.obj", device));
 
-	// Set up the indices, which tell us which vertices to use and in which order
-	// - This is somewhat redundant for just 3 vertices (it's a simple example)
-	// - Indices are technically not required if the vertices are in the buffer 
-	//    in the correct order and each one will be used exactly once
-	// - But just to see how it's done...
-	int triangleIndices[] = { 0, 1, 2 };
-
-	meshes.push_back(new Mesh(triangleVertices, 3, (UINT*)triangleIndices, 3, device));
-
-	Vertex squareVertices[] =
-	{
-		{ XMFLOAT3(-1.0f, +1.0f, +0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(+1.0f, +1.0f, +0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(-1.0f, -1.0f, +0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(+1.0f, -1.0f, +0.0f), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }
-	};
-
-	int squareIndices[] = { 0, 1, 2, 3, 2, 1 };
-
-	meshes.push_back(new Mesh(squareVertices, 4, (UINT*)squareIndices, 6, device));
+	meshes.push_back(new Mesh("sphere.obj", device));
 
 	Vertex starVertices[] =
 	{
@@ -313,9 +288,14 @@ void Game::Draw(float deltaTime, float totalTime)
 		pixelShader = currentEntity->GetMaterial()->GetPixelShader();
 
 		pixelShader->SetData(
-			"Light",
-			&dLight,
-			sizeof(dLight));
+			"light1",
+			&dLight1,
+			sizeof(dLight1));
+
+		pixelShader->SetData(
+			"light2",
+			&dLight2,
+			sizeof(dLight2));
 
 		// Finally do the actual drawing
 		//  - Do this ONCE PER OBJECT you intend to draw

@@ -24,6 +24,12 @@ struct DirectionalLight
 	float3 Direction;
 };
 
+cbuffer externalDLight : register(b0)
+{
+	DirectionalLight light1;
+	DirectionalLight light2;
+};
+
 // --------------------------------------------------------
 // The entry point (main method) for our pixel shader
 // 
@@ -35,6 +41,13 @@ struct DirectionalLight
 // --------------------------------------------------------
 float4 main(VertexToPixel input) : SV_TARGET
 {
+	float3 lightDir1 = normalize(-light1.Direction);
+	float3 lightDir2 = normalize(-light2.Direction);
 	input.normal = normalize(input.normal);
-	return float4(1,0,0,1);
+	float lightAmount1 = saturate(dot(input.normal, -lightDir1));
+	float4 finalLight1 = light1.DiffuseColor * lightAmount1 + light1.AmbientColor;
+	float lightAmount2 = saturate(dot(input.normal, -lightDir2));
+	float4 finalLight2 = light2.DiffuseColor * lightAmount2 + light2.AmbientColor;
+
+	return finalLight1 + finalLight2;
 }

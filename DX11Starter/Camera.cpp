@@ -39,7 +39,7 @@ void Camera::Update(float deltaTime, float totalTime)
 	{
 		cameraPosition.y += 1 * 2 * deltaTime;
 	}
-	if (GetAsyncKeyState('X') & 0x8000)
+	if (GetAsyncKeyState(VK_CONTROL) & 0x8000)
 	{
 		cameraPosition.y -= 1 * 2 * deltaTime;
 	}
