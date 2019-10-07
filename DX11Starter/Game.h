@@ -8,6 +8,7 @@
 #include "Material.h"
 #include "Light.h"
 #include <DirectXMath.h>
+#include <WICTextureLoader.h>
 
 class Game 
 	: public DXCore
@@ -57,6 +58,7 @@ private:
 	int meshCount;
 
 	Material* material1 = nullptr;
+	Material* material2 = nullptr;
 
 	std::vector<Entity*> entities;
 	int entityCount;
@@ -65,4 +67,10 @@ private:
 
 	DirectionalLight dLight1;
 	DirectionalLight dLight2;
+
+	ID3D11ShaderResourceView* cliffTexture = nullptr;
+	ID3D11ShaderResourceView* wallTexture = nullptr;
+
+	ID3D11SamplerState* samplerState = 0;
+	D3D11_SAMPLER_DESC samplerStruct;
 };

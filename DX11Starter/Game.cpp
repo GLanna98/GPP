@@ -33,6 +33,8 @@ Game::Game(HINSTANCE hInstance)
 
 	prevMousePos = { 0,0 };
 
+	samplerStruct = {};
+
 #if defined(DEBUG) || defined(_DEBUG)
 	// Do we want a console window?  Probably only in debug mode
 	CreateConsoleWindow(500, 120, 32, 120);
@@ -58,11 +60,16 @@ Game::~Game()
 	for (auto& m : meshes) delete m;
 
 	delete material1;
+	delete material2;
 
 	for (auto& e : entities) delete e;
 
 	//Delete camera
 	delete gameCamera;
+
+	wallTexture->Release();
+	cliffTexture->Release();
+	samplerState->Release();
 }
 
 // --------------------------------------------------------
@@ -76,6 +83,18 @@ void Game::Init()
 	//  - You'll be expanding and/or replacing these later
 	LoadShaders();
 	CreateMatrices();
+
+	//Load Textures
+	DirectX::CreateWICTextureFromFile(device, context, L"Cliff.tif", 0, &cliffTexture);
+	DirectX::CreateWICTextureFromFile(device, context, L"StoneWall.tif", 0, &wallTexture);
+
+	samplerStruct.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStruct.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStruct.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStruct.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerStruct.MaxLOD = D3D11_FLOAT32_MAX;
+	device->CreateSamplerState(&samplerStruct, &samplerState);
+
 	CreateBasicGeometry();
 
 	// Tell the input assembler stage of the pipeline what kind of
@@ -178,13 +197,16 @@ void Game::CreateBasicGeometry()
 
 	meshes.push_back(new Mesh("helix.obj", device));
 
-	material1 = new Material(pixelShader, vertexShader);
+	material1 = new Material(pixelShader, vertexShader, cliffTexture, samplerState);
+	material2 = new Material(pixelShader, vertexShader, wallTexture, samplerState);
 
 	//Assign meshes to entities
-	for (int i = 0; i < entityCount; i++)
+	for (int i = 0; i < entityCount-1; i++)
 	{
 		entities.push_back(new Entity(meshes[i], material1));
 	}
+
+	entities.push_back(new Entity(meshes[3], material2));
 
 	//Set entities' starting positions
 	entities[0]->SetPostion(DirectX::XMFLOAT3(1.0f, 1.5f, 0.0f));
@@ -286,6 +308,9 @@ void Game::Draw(float deltaTime, float totalTime)
 		currentEntity->PrepareMaterial(viewMatrix, projectionMatrix);
 		vertexShader = currentEntity->GetMaterial()->GetVertexShader();
 		pixelShader = currentEntity->GetMaterial()->GetPixelShader();
+
+		pixelShader->SetShaderResourceView("diffuseTexture", currentEntity->GetMaterial()->GetResourceView());
+		pixelShader->SetSamplerState("basicSampler", samplerState);
 
 		pixelShader->SetData(
 			"light1",

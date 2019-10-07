@@ -30,6 +30,9 @@ cbuffer externalDLight : register(b0)
 	DirectionalLight light2;
 };
 
+Texture2D diffuseTexture  : register(t0);
+SamplerState basicSampler : register(s0);
+
 // --------------------------------------------------------
 // The entry point (main method) for our pixel shader
 // 
@@ -41,13 +44,15 @@ cbuffer externalDLight : register(b0)
 // --------------------------------------------------------
 float4 main(VertexToPixel input) : SV_TARGET
 {
+	float4 surfaceColor = diffuseTexture.Sample(basicSampler, input.uv);
+
 	float3 lightDir1 = normalize(-light1.Direction);
 	float3 lightDir2 = normalize(-light2.Direction);
 	input.normal = normalize(input.normal);
 	float lightAmount1 = saturate(dot(input.normal, -lightDir1));
-	float4 finalLight1 = light1.DiffuseColor * lightAmount1 + light1.AmbientColor;
+	float4 finalLight1 = (light1.DiffuseColor * surfaceColor) * lightAmount1 + (light1.AmbientColor * surfaceColor);
 	float lightAmount2 = saturate(dot(input.normal, -lightDir2));
-	float4 finalLight2 = light2.DiffuseColor * lightAmount2 + light2.AmbientColor;
+	float4 finalLight2 = (light2.DiffuseColor * surfaceColor) * lightAmount2 + (light2.AmbientColor * surfaceColor);
 
 	return finalLight1 + finalLight2;
 }
