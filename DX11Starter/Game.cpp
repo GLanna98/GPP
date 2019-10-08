@@ -85,8 +85,8 @@ void Game::Init()
 	CreateMatrices();
 
 	//Load Textures
-	DirectX::CreateWICTextureFromFile(device, context, L"Cliff.tif", 0, &cliffTexture);
-	DirectX::CreateWICTextureFromFile(device, context, L"StoneWall.tif", 0, &wallTexture);
+	DirectX::CreateWICTextureFromFile(device, context, L"Cliff.jpg", 0, &cliffTexture);
+	DirectX::CreateWICTextureFromFile(device, context, L"StoneWall.jpg", 0, &wallTexture);
 
 	samplerStruct.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerStruct.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
